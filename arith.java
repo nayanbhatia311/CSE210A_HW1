@@ -10,6 +10,7 @@ interface GlobalConstants{
 	String LPAREN="(";
 	String RPAREN=")";
 	String EOF="EOF";
+	String MOD="MOD";
 
 }
 
@@ -57,6 +58,9 @@ class AST {
 			} else if (root.token.type.equals("DIV")) {
 				return left / right;
 			}
+			else if(root.token.type.equals("MOD")){
+				return left % right;
+			}	
 			else{
 				return 0;
 			}
@@ -92,13 +96,17 @@ class Parser implements GlobalConstants {
 
 	Node term(){
 		Node node = this.factor();
-		while(this.current_token.type==MUL || this.current_token.type==DIV){
+		while(this.current_token.type==MUL || this.current_token.type==DIV || this.current_token.type==MOD){
 			Token token = this.current_token;
 			if(token.type==MUL){
 				this.eat(MUL);
 			}
 			else if(token.type==DIV){
 				this.eat(DIV);
+
+			}
+			else if(token.type==MOD){
+				this.eat(MOD);
 
 			}
 			node = new Node(node,token,this.factor());	
@@ -223,6 +231,12 @@ class Lexer implements GlobalConstants{
 			if(this.current_char==')'){
 				this.Advance();
 				return new Token(RPAREN,")");
+			}
+
+			if(this.current_char=='%'){
+				this.Advance();
+				return new Token(MOD,"%");
+
 			}
 			this.error();
 		}
