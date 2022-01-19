@@ -1,3 +1,27 @@
+commit 2a112c28604d70a8ee5461ca87c50ddbe61a8eae
+Author: nayanbhatia311 <nayanbhatia.com@gmail.com>
+Date:   Tue Jan 18 22:05:39 2022 -0800
+
+    modify makefile and readme.md
+
+commit 4c4786cc8af92f342ac5f0a445556e08ee6928db
+Author: nayanbhatia311 <nayanbhatia.com@gmail.com>
+Date:   Tue Jan 18 21:52:37 2022 -0800
+
+    add break in README
+
+commit 9ff10a21e3e189106f2f95e14cb21719ca5440d8
+Author: nayanbhatia311 <nayanbhatia.com@gmail.com>
+Date:   Tue Jan 18 21:51:20 2022 -0800
+
+    add installation of java in makefile and change readme
+
+commit 12bc3362896ef154f220ea50aa51f7ad35e8aecc
+Author: nayanbhatia311 <nayanbhatia.com@gmail.com>
+Date:   Tue Jan 18 21:17:42 2022 -0800
+
+    add git log commit history
+
 commit 196a31499ea379e3818650935e1cc2e98d13a345
 Author: nayanbhatia311 <nayanbhatia.com@gmail.com>
 Date:   Tue Jan 18 21:16:24 2022 -0800
