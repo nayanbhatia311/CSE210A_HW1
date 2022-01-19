@@ -1,0 +1,47 @@
+commit 196a31499ea379e3818650935e1cc2e98d13a345
+Author: nayanbhatia311 <nayanbhatia.com@gmail.com>
+Date:   Tue Jan 18 21:16:24 2022 -0800
+
+    add test and modulo operator
+
+commit 6662a189e902e8df233615d4849f02d3284a77e2
+Author: nayanbhatia311 <nayanbhatia.com@gmail.com>
+Date:   Tue Jan 18 20:44:44 2022 -0800
+
+    add plus minus mul div
+
+commit f040093c2b165fda25db19381a411b1b962fb0f5
+Author: nayanbhatia311 <nayanbhatia.com@gmail.com>
+Date:   Tue Jan 18 20:00:04 2022 -0800
+
+    add ast
+
+commit 613b76dee091d77f5b0f8fc1cfb6f821254f1fd2
+Author: nayanbhatia311 <nayanbhatia.com@gmail.com>
+Date:   Tue Jan 18 18:53:49 2022 -0800
+
+    written parser function
+
+commit 9eaf5fddd467f1a06577e49412b84c99de15a068
+Author: nayanbhatia311 <nayanbhatia.com@gmail.com>
+Date:   Tue Jan 18 16:24:51 2022 -0800
+
+    implement the ast
+
+commit 246d60d44a76cce848e0aa4390249ee8a1e51b86
+Author: nayanbhatia311 <nayanbhatia.com@gmail.com>
+Date:   Tue Jan 18 13:37:06 2022 -0800
+
+    implement parts of token and lexer function
+
+commit 37d7a9aa71e7749e216cd07f6064ac796580bcd8
+Author: nayanbhatia311 <nayanbhatia.com@gmail.com>
+Date:   Tue Jan 18 12:28:10 2022 -0800
+
+    add basic input function
+
+commit c9273188a7fbf1382348af91b13dc88306f64350
+Author: Nayan Bhatia <41787379+nayanbhatia311@users.noreply.github.com>
+Date:   Tue Jan 18 12:25:26 2022 -0800
+
+    Initial commit
