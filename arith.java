@@ -1,26 +1,6 @@
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
-public class arith implements GlobalConstants{
-	public static void main(String args[]){
-	Scanner scanner=new Scanner(System.in);
-	//new GlobalConst();
-	String expression;	
-	while(true){
-		try{
-			expression=scanner.nextLine();
-			System.out.println(expression);
-		}
-		catch(NoSuchElementException e){
-			break;
-		}
-	Lexer lexer=new Lexer(expression); 
-	}
-	}
-	
-
-}
-
 interface GlobalConstants{
 	String INTEGER="INTEGER";
 	String PLUS="PLUS";
@@ -37,43 +17,55 @@ class GlobalConst implements GlobalConstants{
 	public GlobalConst(){
 		System.out.println(INTEGER);
 		System.out.println(new Token(INTEGER,"3"));
-}
-}
-
-class AST{
-	
-}
-
-class BinOp extends AST {
-
-	Token op;
-	Token token;
-	BinOp left;
-	BinOp right;
-	
-	BinOp(BinOp left, Token op, BinOp right){
-		this.left=left;
-		this.right=right;
-		this.op=op;
-		this.token=op;
-	
 	}
 }
 
-class Num extends AST {
-	
+class Node {
 	Token token;
-	Num(Token token){
-
-		this.token=token;
-		this.token.value=token.value;
-
+	Node left;
+	Node right;
+	
+	Node(Node left, Token token, Node right){
+		this.token = token;
+		this.left = left;
+		this.right = right;
 	}
-
-
 }
 
-class Parser implements GlobalConstants{
+class AST {
+	Node root;
+	AST(Node root){
+		this.root = root;
+	}
+	
+	int Eval() {
+		return Traverse(root);
+	}
+
+	int Traverse(Node root) {
+		if (root.token.type.equals("INTEGER")) {
+			return Integer.parseInt(root.token.value);
+		} else {
+			int left = Traverse(root.left);
+			int right = Traverse(root.right);
+			if (root.token.type.equals("PLUS")) {
+				return left + right;
+			} else if (root.token.type.equals("MINUS")) {
+				return left - right;
+			} else if (root.token.type.equals("MUL")) {
+				return left * right;
+			} else if (root.token.type.equals("DIV")) {
+				return left / right;
+			}
+			else{
+
+				return 0;
+			}
+		}
+	}
+}
+
+class Parser implements GlobalConstants {
 	Lexer lexer;
 	Token current_token;
 	Parser(Lexer lexer){
@@ -93,25 +85,14 @@ class Parser implements GlobalConstants{
 		}
 	}
 
-	BinOp factor(){
-
-	Token token=this.current_token;
-	
-		
-	return new BinOp(null,token,null);
-	
-
-	//else if(token.type==LPAREN){
-	//	this.eat(LPAREN);
-	//	BinOp node=this.expr();
-	//	this.eat(RPAREN);
-	//	return node;
-	//}
+	Node factor(){
+		Token token = this.current_token;
+		return new Node(null, token, null);
 	}
 
-	BinOp term(){
+	Node term(){
 
-		BinOp node=this.factor();
+		Node node = this.factor();
 		
 		while(this.current_token.type==MUL || this.current_token.type==DIV){
 			Token token=this.current_token;
@@ -122,7 +103,7 @@ class Parser implements GlobalConstants{
 				this.eat(DIV);
 
 			}
-		node=new BinOp(node,token,this.factor());	
+		node = new Node(node,token,this.factor());	
 
 		
 		
@@ -130,9 +111,9 @@ class Parser implements GlobalConstants{
 	return node;
 	}
 
-	BinOp expr(){
+	Node expr(){
 
-		BinOp node=this.term();
+		Node node=this.term();
 
 		while(this.current_token.type==PLUS || this.current_token.type==MINUS){
 			Token token =this.current_token;
@@ -151,7 +132,7 @@ class Parser implements GlobalConstants{
 	return node;
 	}
 
-	BinOp parse(){
+	Node parse(){
 		return this.expr();
 	}
 }
@@ -250,9 +231,6 @@ class Lexer implements GlobalConstants{
 		this.error();
 		return new Token(EOF,"\u001a");
 	}
-
-
-	
 }
 
 class Token{
@@ -270,7 +248,23 @@ class Token{
 		return "Token("+this.type+","+this.value+")";
 	
 	}	
-	
+}
 
-
+public class arith implements GlobalConstants {
+	public static void main(String args[]){
+		Scanner scanner = new Scanner(System.in);
+		String expression;	
+		while(true){
+			try{
+				expression=scanner.nextLine();
+			}
+			catch(NoSuchElementException e){
+				break;
+			}
+			Lexer lexer = new Lexer(expression); 
+			Parser parser = new Parser(lexer);
+			AST ast = new AST(parser.parse());
+			System.out.println(ast.Eval());
+		}
+	}
 }
