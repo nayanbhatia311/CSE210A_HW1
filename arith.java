@@ -73,6 +73,88 @@ class Num extends AST {
 
 }
 
+class Parser implements GlobalConstants{
+	Lexer lexer;
+	Token current_token;
+	Parser(Lexer lexer){
+		this.lexer=lexer;
+		this.current_token=this.lexer.getNextToken();
+	}
+	void error(){
+		throw new RuntimeException("invalid input");	
+	}	
+	
+	void eat(String token_type){
+		if(this.current_token.type.equals(token_type)){
+			this.current_token=this.lexer.getNextToken();
+		}
+		else{
+			this.error();
+		}
+	}
+
+	BinOp factor(){
+
+	Token token=this.current_token;
+	
+		
+	return new BinOp(null,token,null);
+	
+
+	//else if(token.type==LPAREN){
+	//	this.eat(LPAREN);
+	//	BinOp node=this.expr();
+	//	this.eat(RPAREN);
+	//	return node;
+	//}
+	}
+
+	BinOp term(){
+
+		BinOp node=this.factor();
+		
+		while(this.current_token.type==MUL || this.current_token.type==DIV){
+			Token token=this.current_token;
+			if(token.type==MUL){
+				this.eat(MUL);
+			}
+			else if(token.type==DIV){
+				this.eat(DIV);
+
+			}
+		node=new BinOp(node,token,this.factor());	
+
+		
+		
+		}
+	return node;
+	}
+
+	BinOp expr(){
+
+		BinOp node=this.term();
+
+		while(this.current_token.type==PLUS || this.current_token.type==MINUS){
+			Token token =this.current_token;
+			if(token.type==PLUS){
+				this.eat(PLUS);
+
+			}
+			else if(token.type==MINUS){
+				this.eat(MINUS);
+			}
+
+
+		}
+
+
+	return node;
+	}
+
+	BinOp parse(){
+		return this.expr();
+	}
+}
 
 class Lexer implements GlobalConstants{
 	String text;
@@ -168,6 +250,7 @@ class Lexer implements GlobalConstants{
 		this.error();
 		return new Token(EOF,"\u001a");
 	}
+
 
 	
 }
