@@ -1,7 +1,7 @@
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
-public class arith{
+public class arith implements GlobalConstants{
 	public static void main(String args[]){
 	Scanner scanner=new Scanner(System.in);
 	//new GlobalConst();
@@ -40,7 +40,41 @@ class GlobalConst implements GlobalConstants{
 }
 }
 
-class Lexer{
+class AST{
+	
+}
+
+class BinOp extends AST {
+
+	Token op;
+	Token token;
+	BinOp left;
+	BinOp right;
+	
+	BinOp(BinOp left, Token op, BinOp right){
+		this.left=left;
+		this.right=right;
+		this.op=op;
+		this.token=op;
+	
+	}
+}
+
+class Num extends AST {
+	
+	Token token;
+	Num(Token token){
+
+		this.token=token;
+		this.token.value=token.value;
+
+	}
+
+
+}
+
+
+class Lexer implements GlobalConstants{
 	String text;
 	int position;
 	char current_char;
@@ -70,7 +104,7 @@ class Lexer{
 	
 	public void skip_whitespace(){
 
-		while(!(this.current_char=='\u001a') && Character.isWhitespace(this.current_char)){
+		while(!(this.current_char==('\u001a')) && Character.isWhitespace(this.current_char)){
 
 			this.Advance();
 		}
@@ -84,6 +118,55 @@ class Lexer{
 			this.Advance();
 		}
 		return Integer.parseInt(result.toString());
+	}
+
+	public void error(){
+		throw new RuntimeException("Invalid input");
+
+	}
+
+	public Token getNextToken(){
+			
+		while(!(this.current_char=='\u001a')){
+		
+			if(Character.isWhitespace(this.current_char)){
+				this.skip_whitespace();
+				continue;
+			}
+
+			if(Character.isDigit(this.current_char)){
+				return new Token(INTEGER,Integer.toString(this.integer()));
+			}
+
+			if(this.current_char=='+'){
+				this.Advance();
+				return new Token(PLUS,"+");
+			}
+			if(this.current_char=='-'){
+				this.Advance();
+				return new Token(MINUS,"-");
+			}
+			if(this.current_char=='*'){
+				this.Advance();
+				return new Token(MUL,"*");
+			}
+			if(this.current_char=='/'){
+				this.Advance();
+				return new Token(DIV,"/");
+
+			}
+			if(this.current_char=='('){
+				this.Advance();
+				return new Token(LPAREN,"(");
+			}
+			if(this.current_char==')'){
+				this.Advance();
+				return new Token(RPAREN,")");
+			}
+			
+		}
+		this.error();
+		return new Token(EOF,"\u001a");
 	}
 
 	
