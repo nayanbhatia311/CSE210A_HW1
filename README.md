@@ -1,2 +1,9 @@
 # CSE210A_HW1
-Create an Arith Interpreter in java
+Install java
+Run make
+javac arith
+java arith
+./run.sh
+
+
+Source: https://ruslanspivak.com/lsbasi-part7
