@@ -58,7 +58,6 @@ class AST {
 				return left / right;
 			}
 			else{
-
 				return 0;
 			}
 		}
@@ -73,12 +72,12 @@ class Parser implements GlobalConstants {
 		this.current_token=this.lexer.getNextToken();
 	}
 	void error(){
-		throw new RuntimeException("invalid input");	
+		throw new RuntimeException("ParserError: Invalid Input");	
 	}	
 	
 	void eat(String token_type){
 		if(this.current_token.type.equals(token_type)){
-			this.current_token=this.lexer.getNextToken();
+			this.current_token = this.lexer.getNextToken();
 		}
 		else{
 			this.error();
@@ -87,15 +86,14 @@ class Parser implements GlobalConstants {
 
 	Node factor(){
 		Token token = this.current_token;
+		this.eat(INTEGER);
 		return new Node(null, token, null);
 	}
 
 	Node term(){
-
 		Node node = this.factor();
-		
 		while(this.current_token.type==MUL || this.current_token.type==DIV){
-			Token token=this.current_token;
+			Token token = this.current_token;
 			if(token.type==MUL){
 				this.eat(MUL);
 			}
@@ -103,12 +101,9 @@ class Parser implements GlobalConstants {
 				this.eat(DIV);
 
 			}
-		node = new Node(node,token,this.factor());	
-
-		
-		
+			node = new Node(node,token,this.factor());	
 		}
-	return node;
+		return node;
 	}
 
 	Node expr(){
@@ -119,17 +114,13 @@ class Parser implements GlobalConstants {
 			Token token =this.current_token;
 			if(token.type==PLUS){
 				this.eat(PLUS);
-
 			}
 			else if(token.type==MINUS){
 				this.eat(MINUS);
 			}
-
-
-		}
-
-
-	return node;
+			node = new Node(node,token,this.term());
+		}	
+		return node;
 	}
 
 	Node parse(){
@@ -141,11 +132,12 @@ class Lexer implements GlobalConstants{
 	String text;
 	int position;
 	char current_char;
+	char next_char;
 	public Lexer(String text){
 		this.text=text;
 		this.position=0;
-		this.current_char=this.text.charAt(this.position);
-
+		this.current_char = this.text.charAt(this.position);
+		this.next_char = this.text.charAt(this.position + 1);
 	}
 
 	@Override
@@ -154,24 +146,25 @@ class Lexer implements GlobalConstants{
 	}
 	
 	public void Advance(){
-
-		this.position+=1;
+		this.position += 1;
 		if(this.position>(this.text.length()-1)){
 			this.current_char='\u001a';
+			this.next_char = '\u001a';
 		}
 		else{
-
-			this.current_char=this.text.charAt(this.position);
+			this.current_char = this.text.charAt(this.position);
+			try {
+				this.next_char = this.text.charAt(this.position + 1);
+			} catch (Exception e) {
+				
+			}
 		}
 	}
 	
-	public void skip_whitespace(){
-
+	public void skip_whitespace() {
 		while(!(this.current_char==('\u001a')) && Character.isWhitespace(this.current_char)){
-
 			this.Advance();
 		}
-		
 	}
 
 	public int integer(){
@@ -198,7 +191,7 @@ class Lexer implements GlobalConstants{
 			}
 
 			if(Character.isDigit(this.current_char)){
-				return new Token(INTEGER,Integer.toString(this.integer()));
+				return new Token(INTEGER, Integer.toString(this.integer()));
 			}
 
 			if(this.current_char=='+'){
@@ -206,8 +199,13 @@ class Lexer implements GlobalConstants{
 				return new Token(PLUS,"+");
 			}
 			if(this.current_char=='-'){
-				this.Advance();
-				return new Token(MINUS,"-");
+				if (Character.isDigit(this.next_char)) {
+					this.Advance();
+					return new Token(INTEGER, Integer.toString(-1 * this.integer()));
+				} else {
+					this.Advance();
+					return new Token(MINUS, "-");
+				}
 			}
 			if(this.current_char=='*'){
 				this.Advance();
@@ -226,9 +224,8 @@ class Lexer implements GlobalConstants{
 				this.Advance();
 				return new Token(RPAREN,")");
 			}
-			
+			this.error();
 		}
-		this.error();
 		return new Token(EOF,"\u001a");
 	}
 }
@@ -254,17 +251,13 @@ public class arith implements GlobalConstants {
 	public static void main(String args[]){
 		Scanner scanner = new Scanner(System.in);
 		String expression;	
-		while(true){
-			try{
-				expression=scanner.nextLine();
-			}
-			catch(NoSuchElementException e){
-				break;
-			}
+			expression=scanner.nextLine();
+			
+			
 			Lexer lexer = new Lexer(expression); 
 			Parser parser = new Parser(lexer);
 			AST ast = new AST(parser.parse());
 			System.out.println(ast.Eval());
 		}
-	}
+	
 }
